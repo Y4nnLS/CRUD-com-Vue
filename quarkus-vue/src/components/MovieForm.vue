@@ -55,7 +55,8 @@ export default {
       } else {
         api.createMovie(this.movie)
           .then(() => {
-            this.$router.push({ name: 'ListaFilmes' });
+            this.$router.push({ name: 'movies'});
+            alert("Filme cadastrado com sucesso")
           })
           .catch(error => {
             console.error('Erro ao adicionar filme:', error);
