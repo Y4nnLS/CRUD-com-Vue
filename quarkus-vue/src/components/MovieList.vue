@@ -16,7 +16,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(movie, index) in filteredAndPaginatedMovies" :key="index" :class="{ 'even-row': index % 2 === 0, 'odd-row': index % 2 !== 0 }">
+        <tr
+          v-for="(movie, index) in filteredAndPaginatedMovies"
+          :key="index"
+          :class="{ 'even-row': index % 2 === 0, 'odd-row': index % 2 !== 0 }"
+        >
           <td>{{ movie.ano }}</td>
           <td>{{ movie.título }}</td>
           <td>{{ movie.vencedor ? "Sim" : "Não" }}</td>
@@ -28,9 +32,7 @@
         </tr>
       </tbody>
     </table>
-    <div v-else>
-      Nenhum filme encontrado.
-    </div>
+    <div v-else>Nenhum filme encontrado.</div>
 
     <!-- Popup para exibir informações do filme -->
     <div class="modal" v-if="selectedMovie">
@@ -42,7 +44,12 @@
     </div>
 
     <!-- Paginação -->
-    <Pagination :total="total" :page="page" @page-changed="handlePageChange" :per-page="perPage" />
+    <Pagination
+      :total="total"
+      :page="page"
+      @page-changed="handlePageChange"
+      :per-page="perPage"
+    />
   </div>
 </template>
 
@@ -63,12 +70,12 @@ export default {
       page: 1,
       total: 0,
       perPage: 10,
-      selectedMovie: null
+      selectedMovie: null,
     };
   },
   computed: {
     filteredMovies() {
-      return this.movies.filter(movie =>
+      return this.movies.filter((movie) =>
         movie.título.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
@@ -76,7 +83,7 @@ export default {
       const startIndex = (this.page - 1) * this.perPage;
       const endIndex = startIndex + this.perPage;
       return this.filteredMovies.slice(startIndex, endIndex);
-    }
+    },
   },
   methods: {
     fetchMovies() {
@@ -85,50 +92,36 @@ export default {
         sort: this.sortKey,
         order: this.sortAsc ? "asc" : "desc",
         page: this.page,
-        per_page: this.perPage
+        per_page: this.perPage,
       };
 
       api
-        .getMovies(params)
+        .getAllMovies(params)
         .then((response) => {
-          const filmesString = response.data.substring(1, response.data.length - 1).split("], ");
+          let filmesString = ""; // Inicialize uma string vazia
+          if (typeof response.data === "string") {
+            filmesString = response.data;
+          } else {
+            // Converta o objeto JSON para uma string
+            filmesString = JSON.stringify(response.data);
+          }
 
-          this.movies = filmesString.map((filmeString) => {
-            filmeString = filmeString.replace(/(\[|\])/g, "");
-            const partesFilme = filmeString.split(", ");
-            // const id = partesFilme
-            //   .find((parte) => parte.includes("id="))
-            //   .split("=")[1];
-            const ano = partesFilme
-              .find((parte) => parte.includes("year="))
-              .split("=")[1];
-            const título = partesFilme
-              .find((parte) => parte.includes("title="))
-              .split("=")[1];
-            const vencedor =
-              partesFilme
-                .find((parte) => parte.includes("winner="))
-                .split("=")[1] === "true";
-            const studio = partesFilme
-              .find((parte) => parte.includes("studios="))
-              .split("=")[1];
-            const producers = partesFilme
-              .find((parte) => parte.includes("producers="))
-              .split("=")[1];
+          // Faça o parsing da string de filmes de acordo com a estrutura do seu objeto JSON
+          const filmesArray = JSON.parse(filmesString);
+
+          this.movies = filmesArray.map((filme) => {
             return {
-              // id,
-              ano,
-              título, 
-              vencedor,
-              studio,
-              producers
+              ano: filme.releaseYear,
+              título: filme.title,
+              vencedor: filme.winner,
+              studio: filme.studios,
+              producers: filme.producers,
             };
           });
 
-          if (response.headers['x-total-count']) {
-            this.total = parseInt(response.headers['x-total-count'], 10);
+          if (response.headers["x-total-count"]) {
+            this.total = parseInt(response.headers["x-total-count"], 10);
           } else {
-            // console.error('x-total-count header is missing');
             this.total = this.filteredMovies.length;
           }
         })
@@ -136,6 +129,7 @@ export default {
           console.error("Erro ao buscar filmes:", error);
         });
     },
+
     sortBy(key) {
       if (this.sortKey === key) {
         this.sortAsc = !this.sortAsc;
@@ -159,7 +153,7 @@ export default {
         releaseYear: movie.ano,
         studios: movie.studio, // Preencha com os dados do estúdio, se disponíveis
         producers: movie.producers, // Preencha com os dados dos produtores, se disponíveis
-        winner: movie.vencedor
+        winner: movie.vencedor,
       };
     },
     closePopup() {
@@ -168,7 +162,7 @@ export default {
     handlePageChange(page) {
       this.page = page;
       this.fetchMovies();
-    }
+    },
   },
   mounted() {
     this.fetchMovies();
@@ -193,7 +187,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-content {
