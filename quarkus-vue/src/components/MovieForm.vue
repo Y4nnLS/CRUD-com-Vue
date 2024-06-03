@@ -45,19 +45,31 @@ export default {
   methods: {
     salvarFilme() {
       if (this.movie.id) {
-        api.updateMovie(this.movie.id, this.movie).then(() => {
-          this.$router.push({ name: 'ListaFilmes' });
-        });
+        api.updateMovie(this.movie.id, this.movie)
+          .then(() => {
+            this.$router.push({ name: 'ListaFilmes' });
+          })
+          .catch(error => {
+            console.error('Erro ao atualizar filme:', error);
+          });
       } else {
-        api.createMovie(this.movie).then(() => {
-          this.$router.push({ name: 'ListaFilmes' });
-        });
+        api.createMovie(this.movie)
+          .then(() => {
+            this.$router.push({ name: 'ListaFilmes' });
+          })
+          .catch(error => {
+            console.error('Erro ao adicionar filme:', error);
+          });
       }
     },
     carregarFilme(id) {
-      api.getFilme(id).then(response => {
-        this.movie = response.data;
-      });
+      api.getFilme(id)
+        .then(response => {
+          this.movie = response.data;
+        })
+        .catch(error => {
+          console.error('Erro ao carregar filme:', error);
+        });
     },
   },
   mounted() {

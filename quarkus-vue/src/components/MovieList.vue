@@ -96,6 +96,9 @@ export default {
           this.movies = filmesString.map((filmeString) => {
             filmeString = filmeString.replace(/(\[|\])/g, "");
             const partesFilme = filmeString.split(", ");
+            // const id = partesFilme
+            //   .find((parte) => parte.includes("id="))
+            //   .split("=")[1];
             const ano = partesFilme
               .find((parte) => parte.includes("year="))
               .split("=")[1];
@@ -113,6 +116,7 @@ export default {
               .find((parte) => parte.includes("producers="))
               .split("=")[1];
             return {
+              // id,
               ano,
               título, 
               vencedor,

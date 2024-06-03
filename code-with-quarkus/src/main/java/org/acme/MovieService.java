@@ -147,4 +147,5 @@ public class MovieService {
         result.put("max", maxIntervals);
         return result;
     }
+    
 }

@@ -1,21 +1,17 @@
 package org.acme;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
+import org.jboss.logging.Logger;
 
 @Path("/movies")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MovieResource {
+
+    private static final Logger LOGGER = Logger.getLogger(MovieResource.class);
 
     private final MovieService movieService;
 
@@ -31,6 +27,9 @@ public class MovieResource {
     @POST
     @Path("/add")
     public Response create(Movie movie) {
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        System.out.println("entrou create");
+        LOGGER.info("Recebendo solicitação para criar filme: " + movie);
         movieService.addMovie(movie);
         return Response.status(Response.Status.CREATED).entity(movie).build();
     }
@@ -49,6 +48,7 @@ public class MovieResource {
     @PUT
     @Path("/{id}/update")
     public Response update(@PathParam("id") Long id, Movie movie) {
+        LOGGER.info("Recebendo solicitação para atualizar filme com ID " + id + ": " + movie);
         Movie updatedMovie = movieService.updateMovie(id, movie);
         if (updatedMovie != null) {
             return Response.ok(updatedMovie).build();
@@ -60,6 +60,7 @@ public class MovieResource {
     @DELETE
     @Path("/{id}/delete")
     public Response delete(@PathParam("id") Long id) {
+        LOGGER.info("Recebendo solicitação para deletar filme com ID " + id);
         boolean deleted = movieService.deleteMovie(id);
         if (deleted) {
             return Response.noContent().build();
