@@ -23,7 +23,7 @@
           <td>
             <button @click="editMovie(movie.título)">Edit</button>
             <button @click="deleteMovie(movie.título)">Delete</button>
-            <button @click="showMovieInfo(movie)">info</button>
+            <button @click="showMovieInfo(movie)">Info</button>
           </td>
         </tr>
       </tbody>
@@ -31,30 +31,31 @@
     <div v-else>
       Nenhum filme encontrado.
     </div>
+
     <!-- Popup para exibir informações do filme -->
     <div class="modal" v-if="selectedMovie">
       <div class="modal-content">
         <span class="close" @click="closePopup">&times;</span>
-        <!-- Passando o filme selecionado como propriedade para o componente Movie -->
+        <!-- Usando o componente Movie para exibir informações do filme -->
         <Movie :movie="selectedMovie" />
       </div>
     </div>
 
     <!-- Paginação -->
-    <pagination :total="filteredMovies.length" :page="page" @page-changed="handlePageChange" :per-page="perPage" />
+    <Pagination :total="total" :page="page" @page-changed="handlePageChange" :per-page="perPage" />
   </div>
 </template>
 
 <script>
 import api from "../services/api";
 import Pagination from "./Pagination.vue";
-import Movie from "./Movie.vue";
-
+import Movie from "./Movie.vue"; // Importe o componente Movie aqui
 
 export default {
-  components: { Pagination, Movie },
+  components: { Pagination, Movie }, // Registre o componente Movie aqui
   data() {
     return {
+      activeAddJogoModal: false,
       movies: [],
       searchQuery: "",
       sortKey: "year",
@@ -87,13 +88,9 @@ export default {
         per_page: this.perPage
       };
 
-      console.log('Fetching movies with params:', params);
-
       api
         .getMovies(params)
         .then((response) => {
-          console.log('Response from API:', response);
-
           const filmesString = response.data.substring(1, response.data.length - 1).split("], ");
 
           this.movies = filmesString.map((filmeString) => {
@@ -109,24 +106,27 @@ export default {
               partesFilme
                 .find((parte) => parte.includes("winner="))
                 .split("=")[1] === "true";
+            const studio = partesFilme
+              .find((parte) => parte.includes("studios="))
+              .split("=")[1];
+            const producers = partesFilme
+              .find((parte) => parte.includes("producers="))
+              .split("=")[1];
             return {
               ano,
-              título,
+              título, 
               vencedor,
+              studio,
+              producers
             };
           });
 
-          console.log('Response headers:', response.headers);
-
-          // Temporariamente calculando o total localmente se o cabeçalho não estiver presente
           if (response.headers['x-total-count']) {
             this.total = parseInt(response.headers['x-total-count'], 10);
           } else {
-            console.error('x-total-count header is missing');
-            this.total = this.movies.length; // Usando o comprimento dos filmes retornados como fallback temporário
+            // console.error('x-total-count header is missing');
+            this.total = this.filteredMovies.length;
           }
-
-          console.log('Total movies count:', this.total);
         })
         .catch((error) => {
           console.error("Erro ao buscar filmes:", error);
@@ -150,17 +150,18 @@ export default {
       });
     },
     showMovieInfo(movie) {
-      console.log("Entrou1")
-      this.selectedMovie = movie;
-      // console.log('Informações do filme:', movie);
-
+      this.selectedMovie = {
+        title: movie.título,
+        releaseYear: movie.ano,
+        studios: movie.studio, // Preencha com os dados do estúdio, se disponíveis
+        producers: movie.producers, // Preencha com os dados dos produtores, se disponíveis
+        winner: movie.vencedor
+      };
     },
     closePopup() {
-      console.log("entrou2 close")
       this.selectedMovie = null;
     },
     handlePageChange(page) {
-      console.log('Page changed to:', page);
       this.page = page;
       this.fetchMovies();
     }
@@ -180,7 +181,7 @@ export default {
 }
 /* Estilos para o popup/modal */
 .modal {
-  display: none;
+  display: block;
   position: fixed;
   z-index: 1;
   left: 0;
@@ -196,7 +197,9 @@ export default {
   margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
+  border-radius: 5px;
   width: 80%;
+  color: black;
 }
 
 .close {
