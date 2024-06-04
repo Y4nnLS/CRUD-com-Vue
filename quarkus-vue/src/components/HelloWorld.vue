@@ -17,6 +17,7 @@ defineProps({
       <a href="https://pt.quarkus.io/" target="_blank" rel="noopener">Quarkus</a>.
     </h3>
   </div>
+  <p>Acesse o repositório do projeto clicando<a href="https://github.com/Y4nnLS/CRUD-com-Vue" target="_blank" rel="noopener">aqui</a>.</p>
 </template>
 
 <style scoped>

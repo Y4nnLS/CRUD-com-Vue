@@ -4,54 +4,26 @@ Este projeto é uma aplicação web para gerenciamento de filmes. Ele permite ad
 
 ## Estrutura do Projeto
 
-### Frontend
+### Projeto Proposto
 
-#### api.js
-Este arquivo é responsável por fazer as requisições HTTP para a API do backend. Ele usa a biblioteca Axios para criar uma instância da API com a URL base e os cabeçalhos padrão.
+#### Backend Imperativo
 
-- createMovie(movie): Envia uma requisição POST para adicionar um novo filme.
-- updateMovie(id, movie): Envia uma requisição PUT para atualizar um filme existente pelo ID.
-- getMovie(id): Envia uma requisição GET para recuperar um filme pelo ID.
-- getAllMovies(): Envia uma requisição GET para recuperar todos os filmes.
-- deleteMovie(id): Envia uma requisição DELETE para remover um filme pelo ID.
+O backend foi implementado utilizando o padrão RESTful. Foi criada uma classe `MovieResource` que contem os métodos CRUD (Create, Read, Update, Delete). Cada método foi mapeado para um endpoint específico usando as anotações do JAX-RS:
 
-#### MovieForm.vue
-Componente Vue que fornece um formulário para adicionar ou editar um filme. Ele lida com o envio do formulário e se comunica com a API para salvar os dados do filme.
-- salvarFilme(): Método para salvar um filme, seja criando um novo ou atualizando um existente.
-- carregarFilme(id): Método para carregar os dados de um filme ao editar.
+- `@POST`: Endpoint para criar um novo filme.
+- `@GET`: Endpoint para ler (recuperar) filmes.
+- `@PUT`: Endpoint para atualizar um filme existente.
+- `@DELETE`: Endpoint para deletar um filme.
 
-#### MovieList.vue
-Componente Vue que exibe uma lista de filmes com funcionalidades de busca, ordenação, paginação e ações como editar, excluir e visualizar detalhes dos filmes.
-- fetchMovies(): Método para buscar a lista de filmes da API.
-- sortBy(key): Método para ordenar filmes por uma chave especificada.
-- editMovie(id): Navega para o formulário de edição de filme.
-- deleteMovie(id, title): Exclui um filme e atualiza a lista.
-- showMovieInfo(movie): Exibe informações detalhadas sobre um filme.
+#### Frontend
 
-### Backend
-O backend é implementado em Java usando o Quarkus. Ele inclui várias classes para manipular os dados dos filmes.
+O frontend foi desenvolvido usando Vue.js e consiste em três componentes principais:
 
-#### MovieResource.java
-Classe que define os endpoints da API REST para operações CRUD em filmes.
+- **MovieList.vue**: Exibe uma lista de filmes e inclui funcionalidades de filtro por nome, paginação sob demanda e ordenação na coluna nome.
+- **MovieForm.vue**: Fornece um formulário para adicionar ou editar um filme.
+- **Movie.vue**: Exibe os detalhes de um filme em um painel.
 
-- `getAll()`: Retorna uma lista de todos os filmes.
-- `create(Movie)`: Adiciona um novo filme.
-- `getById(Long id)`: Recupera um filme pelo ID.
-- `update(Long id, Movie)`: Atualiza um filme existente pelo ID.
-- `delete(Long id)`: Exclui um filme pelo ID.
-
-#### MovieService.java
-Classe que contém a lógica de negócios para manipulação dos filmes, como adicionar, atualizar, excluir e listar filmes.
-
-#### Movie.java
-Classe que representa a entidade Filme, mapeada para a tabela "movies" no banco de dados.
-- releaseYear: Ano de lançamento do filme.
-- title: Título do filme.
-- studios: Estúdios responsáveis pelo filme.
-- producers: Produtores do filme.
-- winner: Indica se o filme foi vencedor de algum prêmio.
-
-## Como Executar o Projeto
+### Como Executar o Projeto
 
 ### Backend
 1. Clone o repositório.
@@ -62,4 +34,3 @@ Classe que representa a entidade Filme, mapeada para a tabela "movies" no banco 
 1. Navegue até o diretório do projeto frontend.
 2. Execute o comando `npm install` para instalar as dependências.
 3. Execute o comando `npm run serve` para iniciar o servidor de desenvolvimento.
-
