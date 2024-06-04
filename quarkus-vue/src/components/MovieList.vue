@@ -75,9 +75,23 @@ export default {
   },
   computed: {
     filteredMovies() {
-      return this.movies.filter((movie) =>
+      let movies = this.movies.filter((movie) =>
         movie.title.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
+
+      if (this.sortKey) {
+        movies.sort((a, b) => {
+          let result = 0;
+          if (a[this.sortKey] < b[this.sortKey]) {
+            result = -1;
+          } else if (a[this.sortKey] > b[this.sortKey]) {
+            result = 1;
+          }
+          return this.sortAsc ? result : -result;
+        });
+      }
+
+      return movies;
     },
     filteredAndPaginatedMovies() {
       const startIndex = (this.page - 1) * this.perPage;
