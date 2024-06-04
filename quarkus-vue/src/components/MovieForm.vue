@@ -22,7 +22,9 @@
         <label>Vencedor</label>
         <input type="checkbox" v-model="movie.winner" />
       </div>
-      <button type="submit">Salvar</button>
+      <button type="submit">{{ movie.id ? 'Salvar Alterações' : 'Adicionar Filme' }}</button>
+
+      <button type="button" @click="goBack">Voltar</button>
     </form>
   </div>
 </template>
@@ -43,11 +45,15 @@ export default {
     };
   },
   methods: {
+    goBack() {
+      this.$router.go(-1);
+    },
     salvarFilme() {
       if (this.movie.id) {
         api.updateMovie(this.movie.id, this.movie)
           .then(() => {
             this.$router.push({ name: 'movies' });
+            alert("Filme atualizado com sucesso");
           })
           .catch(error => {
             console.error('Erro ao atualizar filme:', error);
