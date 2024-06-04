@@ -14,11 +14,6 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/about',
-      name: 'about',
-      component: AboutView
-    },
-    {
       path: '/movies',
       name: 'movies',
       component: MovieListView

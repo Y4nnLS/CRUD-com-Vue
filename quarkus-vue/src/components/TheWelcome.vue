@@ -1,88 +1,88 @@
-<script setup>
-import WelcomeItem from './WelcomeItem.vue'
-import DocumentationIcon from './icons/IconDocumentation.vue'
-import ToolingIcon from './icons/IconTooling.vue'
-import EcosystemIcon from './icons/IconEcosystem.vue'
-import CommunityIcon from './icons/IconCommunity.vue'
-import SupportIcon from './icons/IconSupport.vue'
-</script>
-
 <template>
-  <WelcomeItem>
-    <template #icon>
-      <DocumentationIcon />
-    </template>
-    <template #heading>Documentation</template>
+  <div>
+    <h1>Visão Geral do Projeto</h1>
+    <section>
+      <h2>api.js</h2>
+      <p>
+        Este arquivo é responsável por fazer as requisições HTTP para a API do backend. Ele usa a biblioteca Axios para criar uma instância da API com a URL base e os cabeçalhos padrão.
+      </p>
+      <ul>
+        <li><strong>createMovie(movie):</strong> Envia uma requisição POST para adicionar um novo filme.</li>
+        <li><strong>updateMovie(id, movie):</strong> Envia uma requisição PUT para atualizar um filme existente pelo ID.</li>
+        <li><strong>getMovie(id):</strong> Envia uma requisição GET para recuperar um filme pelo ID.</li>
+        <li><strong>getAllMovies():</strong> Envia uma requisição GET para recuperar todos os filmes.</li>
+        <li><strong>deleteMovie(id):</strong> Envia uma requisição DELETE para remover um filme pelo ID.</li>
+      </ul>
+    </section>
 
-    Vue’s
-    <a href="https://vuejs.org/" target="_blank" rel="noopener">official documentation</a>
-    provides you with all information you need to get started.
-  </WelcomeItem>
+    <section>
+      <h2>MovieForm.vue</h2>
+      <p>
+        Este componente fornece um formulário para adicionar ou editar um filme. Ele lida com o envio do formulário e se comunica com a API para salvar os dados do filme.
+      </p>
+      <ul>
+        <li><strong>salvarFilme():</strong> Método para salvar um filme, seja criando um novo ou atualizando um existente.</li>
+        <li><strong>carregarFilme(id):</strong> Método para carregar os dados de um filme ao editar.</li>
+      </ul>
+    </section>
 
-  <WelcomeItem>
-    <template #icon>
-      <ToolingIcon />
-    </template>
-    <template #heading>Tooling</template>
+    <section>
+      <h2>MovieList.vue</h2>
+      <p>
+        Este componente exibe uma lista de filmes com opções para buscar, ordenar, paginar e realizar ações como editar, excluir ou visualizar detalhes de um filme.
+      </p>
+      <ul>
+        <li><strong>fetchMovies():</strong> Método para buscar a lista de filmes da API.</li>
+        <li><strong>sortBy(key):</strong> Método para ordenar filmes por uma chave especificada.</li>
+        <li><strong>editMovie(id):</strong> Navega para o formulário de edição de filme.</li>
+        <li><strong>deleteMovie(id, title):</strong> Exclui um filme e atualiza a lista.</li>
+        <li><strong>showMovieInfo(movie):</strong> Exibe informações detalhadas sobre um filme.</li>
+      </ul>
+    </section>
 
-    This project is served and bundled with
-    <a href="https://vitejs.dev/guide/features.html" target="_blank" rel="noopener">Vite</a>. The
-    recommended IDE setup is
-    <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">VSCode</a> +
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank" rel="noopener">Volar</a>. If
-    you need to test your components and web pages, check out
-    <a href="https://www.cypress.io/" target="_blank" rel="noopener">Cypress</a> and
-    <a href="https://on.cypress.io/component" target="_blank" rel="noopener"
-      >Cypress Component Testing</a
-    >.
+    <section>
+      <h2>Backend (Java)</h2>
+      <p>
+        O backend é implementado em Java usando o Quarkus. Ele inclui várias classes para manipular os dados dos filmes.
+      </p>
+      <h3>MovieResource.java</h3>
+      <p>
+        Esta classe define os endpoints da API REST para operações CRUD em filmes.
+      </p>
+      <ul>
+        <li><strong>getAll():</strong> Retorna uma lista de todos os filmes.</li>
+        <li><strong>create(Movie):</strong> Adiciona um novo filme.</li>
+        <li><strong>getById(Long id):</strong> Recupera um filme pelo ID.</li>
+        <li><strong>update(Long id, Movie):</strong> Atualiza um filme existente pelo ID.</li>
+        <li><strong>delete(Long id):</strong> Exclui um filme pelo ID.</li>
+      </ul>
+    </section>
 
-    <br />
+    <section>
+      <h3>MovieService.java</h3>
+      <p>
+        Esta classe contém a lógica de negócios para manipulação dos filmes, como adicionar, atualizar, excluir e listar filmes.
+      </p>
+    </section>
 
-    More instructions are available in <code>README.md</code>.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <EcosystemIcon />
-    </template>
-    <template #heading>Ecosystem</template>
-
-    Get official tools and libraries for your project:
-    <a href="https://pinia.vuejs.org/" target="_blank" rel="noopener">Pinia</a>,
-    <a href="https://router.vuejs.org/" target="_blank" rel="noopener">Vue Router</a>,
-    <a href="https://test-utils.vuejs.org/" target="_blank" rel="noopener">Vue Test Utils</a>, and
-    <a href="https://github.com/vuejs/devtools" target="_blank" rel="noopener">Vue Dev Tools</a>. If
-    you need more resources, we suggest paying
-    <a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">Awesome Vue</a>
-    a visit.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <CommunityIcon />
-    </template>
-    <template #heading>Community</template>
-
-    Got stuck? Ask your question on
-    <a href="https://chat.vuejs.org" target="_blank" rel="noopener">Vue Land</a>, our official
-    Discord server, or
-    <a href="https://stackoverflow.com/questions/tagged/vue.js" target="_blank" rel="noopener"
-      >StackOverflow</a
-    >. You should also subscribe to
-    <a href="https://news.vuejs.org" target="_blank" rel="noopener">our mailing list</a> and follow
-    the official
-    <a href="https://twitter.com/vuejs" target="_blank" rel="noopener">@vuejs</a>
-    twitter account for latest news in the Vue world.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <SupportIcon />
-    </template>
-    <template #heading>Support Vue</template>
-
-    As an independent project, Vue relies on community backing for its sustainability. You can help
-    us by
-    <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
-  </WelcomeItem>
+    <section>
+      <h3>Movie.java</h3>
+      <p>
+        Esta classe representa a entidade Filme, mapeada para a tabela "movies" no banco de dados.
+      </p>
+      <ul>
+        <li><strong>releaseYear:</strong> Ano de lançamento do filme.</li>
+        <li><strong>title:</strong> Título do filme.</li>
+        <li><strong>studios:</strong> Estúdios responsáveis pelo filme.</li>
+        <li><strong>producers:</strong> Produtores do filme.</li>
+        <li><strong>winner:</strong> Indica se o filme foi vencedor de algum prêmio.</li>
+      </ul>
+    </section>
+  </div>
 </template>
+
+<script>
+export default {
+  name: "ProjectOverview",
+};
+</script>
