@@ -22,5 +22,8 @@ export default {
   },
   deleteMovie(id) {
     return api.delete(`/movies/${id}/delete`);
-  }
+  },
+  getMovie(id) {
+    return api.get(`/movies/${id}`);
+  },
 };

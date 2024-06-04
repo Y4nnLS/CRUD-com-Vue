@@ -47,7 +47,7 @@ export default {
       if (this.movie.id) {
         api.updateMovie(this.movie.id, this.movie)
           .then(() => {
-            this.$router.push({ name: 'ListaFilmes' });
+            this.$router.push({ name: 'movies' });
           })
           .catch(error => {
             console.error('Erro ao atualizar filme:', error);
@@ -55,8 +55,8 @@ export default {
       } else {
         api.createMovie(this.movie)
           .then(() => {
-            this.$router.push({ name: 'movies'});
-            alert("Filme cadastrado com sucesso")
+            this.$router.push({ name: 'movies' });
+            alert("Filme cadastrado com sucesso");
           })
           .catch(error => {
             console.error('Erro ao adicionar filme:', error);
@@ -64,7 +64,7 @@ export default {
       }
     },
     carregarFilme(id) {
-      api.getFilme(id)
+      api.getMovie(id)
         .then(response => {
           this.movie = response.data;
         })

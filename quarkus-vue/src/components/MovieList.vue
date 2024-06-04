@@ -9,7 +9,7 @@
     <table v-if="filteredAndPaginatedMovies.length > 0">
       <thead>
         <tr>
-          <th @click="sortBy('year')">Ano</th>
+          <th @click="sortBy('releaseYear')">Ano</th>
           <th @click="sortBy('title')">Título</th>
           <th>Prêmio</th>
           <th>Ações</th>
@@ -21,12 +21,12 @@
           :key="index"
           :class="{ 'even-row': index % 2 === 0, 'odd-row': index % 2 !== 0 }"
         >
-          <td>{{ movie.ano }}</td>
-          <td>{{ movie.título }}</td>
-          <td>{{ movie.vencedor ? "Sim" : "Não" }}</td>
+          <td>{{ movie.releaseYear }}</td>
+          <td>{{ movie.title }}</td>
+          <td>{{ movie.winner ? "Sim" : "Não" }}</td>
           <td>
-            <button @click="editMovie(movie.título)">Edit</button>
-            <button @click="deleteMovie(movie.título)">Delete</button>
+            <button @click="editMovie(movie.id)">Edit</button>
+            <button @click="deleteMovie(movie.id, movie.title)">Delete</button>
             <button @click="showMovieInfo(movie)">Info</button>
           </td>
         </tr>
@@ -56,16 +56,16 @@
 <script>
 import api from "../services/api";
 import Pagination from "./Pagination.vue";
-import Movie from "./Movie.vue"; // Importe o componente Movie aqui
+import Movie from "./Movie.vue";
 
 export default {
-  components: { Pagination, Movie }, // Registre o componente Movie aqui
+  components: { Pagination, Movie },
   data() {
     return {
       activeAddJogoModal: false,
       movies: [],
       searchQuery: "",
-      sortKey: "year",
+      sortKey: "releaseYear",
       sortAsc: true,
       page: 1,
       total: 0,
@@ -76,7 +76,7 @@ export default {
   computed: {
     filteredMovies() {
       return this.movies.filter((movie) =>
-        movie.título.toLowerCase().includes(this.searchQuery.toLowerCase())
+        movie.title.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
     filteredAndPaginatedMovies() {
@@ -98,22 +98,21 @@ export default {
       api
         .getAllMovies(params)
         .then((response) => {
-          let filmesString = ""; // Inicialize uma string vazia
+          let filmesString = "";
           if (typeof response.data === "string") {
             filmesString = response.data;
           } else {
-            // Converta o objeto JSON para uma string
             filmesString = JSON.stringify(response.data);
           }
 
-          // Faça o parsing da string de filmes de acordo com a estrutura do seu objeto JSON
           const filmesArray = JSON.parse(filmesString);
 
           this.movies = filmesArray.map((filme) => {
             return {
-              ano: filme.releaseYear,
-              título: filme.title,
-              vencedor: filme.winner,
+              id: filme.id,
+              releaseYear: filme.releaseYear,
+              title: filme.title,
+              winner: filme.winner,
               studio: filme.studios,
               producers: filme.producers,
             };
@@ -140,20 +139,22 @@ export default {
       this.fetchMovies();
     },
     editMovie(id) {
-      this.$router.push({ name: "EditMovie", params: { id } });
+      this.$router.push({ name: "editMovie", params: { id } });
     },
-    deleteMovie(id) {
+    deleteMovie(id, title) {
       api.deleteMovie(id).then(() => {
         this.fetchMovies();
       });
+      alert("Filme ''" + title +"'' excluído com sucesso!!");
     },
     showMovieInfo(movie) {
       this.selectedMovie = {
-        title: movie.título,
-        releaseYear: movie.ano,
-        studios: movie.studio, // Preencha com os dados do estúdio, se disponíveis
-        producers: movie.producers, // Preencha com os dados dos produtores, se disponíveis
-        winner: movie.vencedor,
+        id: movie.id,
+        title: movie.title,
+        releaseYear: movie.releaseYear,
+        studios: movie.studio,
+        producers: movie.producers,
+        winner: movie.winner,
       };
     },
     closePopup() {
